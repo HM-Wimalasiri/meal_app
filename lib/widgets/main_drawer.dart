@@ -16,19 +16,18 @@ class MainDrawer extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
               size: 48,
             ),
-            SizedBox(
+            const SizedBox(
               width: 18,
             ),
             Text(
               'Cooking Up!',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge!
-                  .copyWith(color: Theme.of(context).colorScheme.primary),
-            )
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
           ],
         ),
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -39,6 +38,32 @@ class MainDrawer extends StatelessWidget {
             end: Alignment.bottomRight,
           ),
         ),
+      ),
+      ListTile(
+        leading: Icon(
+          Icons.restaurant,
+          size: 26,
+          color: Theme.of(context).colorScheme.onBackground,
+        ),
+        title: Text(
+          'Meals',
+          style: Theme.of(context).textTheme.titleSmall!.copyWith(
+              color: Theme.of(context).colorScheme.onBackground, fontSize: 24),
+        ),
+        onTap: () {},
+      ),
+      ListTile(
+        leading: Icon(
+          Icons.settings,
+          size: 26,
+          color: Theme.of(context).colorScheme.onBackground,
+        ),
+        title: Text(
+          'Filters',
+          style: Theme.of(context).textTheme.titleSmall!.copyWith(
+              color: Theme.of(context).colorScheme.onBackground, fontSize: 24),
+        ),
+        onTap: () {},
       )
     ]));
   }
