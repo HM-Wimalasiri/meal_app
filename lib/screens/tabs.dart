@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:mealapp/data/dummy_data.dart';
-import 'package:mealapp/models/meal.dart';
-import 'package:mealapp/screens/categories.dart';
-import 'package:mealapp/screens/filters.dart';
-import 'package:mealapp/screens/meals.dart';
-import 'package:mealapp/widgets/main_drawer.dart';
+
+
+import '../models/meal.dart';
+import '../widgets/main_drawer.dart';
+import 'categories.dart';
+import 'filters.dart';
+import 'meals.dart';
 
 const kInitialFilters = {
   Filter.glutenFree: false,
   Filter.lactoseFree: false,
-  Filter.vegan: false,
-  Filter.vegetarian: false
+  Filter.vegetarian: false,
+  Filter.vegan: false
 };
 
 class TabsScreen extends StatefulWidget {
@@ -18,32 +20,36 @@ class TabsScreen extends StatefulWidget {
 
   @override
   State<TabsScreen> createState() {
-    return _TabScreenState();
+    return _TabsScreenState();
   }
 }
 
-class _TabScreenState extends State<TabsScreen> {
+class _TabsScreenState extends State<TabsScreen> {
   int _selectedPageIndex = 0;
-  final List<Meal> _favouriteMeals = [];
+  final List<Meal> _favoriteMeals = [];
   Map<Filter, bool> _selectedFilters = kInitialFilters;
 
   void _showInfoMessage(String message) {
     ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
   }
 
-  void _toggleMealFavouriteStatus(Meal meal) {
-    final isExisting = _favouriteMeals.contains(meal);
+  void _toggleMealFavoriteStatus(Meal meal) {
+    final isExisting = _favoriteMeals.contains(meal);
+
     if (isExisting) {
       setState(() {
-        _favouriteMeals.remove(meal);
-        _showInfoMessage("Meal is no longer in a favourite.");
+        _favoriteMeals.remove(meal);
       });
+      _showInfoMessage('Meal is no longer a favorite.');
     } else {
       setState(() {
-        _favouriteMeals.add(meal);
-        _showInfoMessage("Meal is a favourite.");
+        _favoriteMeals.add(meal);
+        _showInfoMessage('Marked as a favorite!');
       });
     }
   }
@@ -54,11 +60,16 @@ class _TabScreenState extends State<TabsScreen> {
     });
   }
 
-  Future<void> _setScreen(String identifier) async {
+  void _setScreen(String identifier) async {
     Navigator.of(context).pop();
     if (identifier == 'filters') {
       final result = await Navigator.of(context).push<Map<Filter, bool>>(
-          MaterialPageRoute(builder: (ctx) => const FiltersScreen()));
+        MaterialPageRoute(
+          builder: (ctx) => FiltersScreen(
+            currentFilters: _selectedFilters,
+          ),
+        ),
+      );
 
       setState(() {
         _selectedFilters = result ?? kInitialFilters;
@@ -85,17 +96,17 @@ class _TabScreenState extends State<TabsScreen> {
     }).toList();
 
     Widget activePage = CategoriesScreen(
-      onToggleFavourite: _toggleMealFavouriteStatus,
-      availableMeal: availableMeals,
+      onToggleFavorite: _toggleMealFavoriteStatus,
+      availableMeals: availableMeals,
     );
     var activePageTitle = 'Categories';
 
     if (_selectedPageIndex == 1) {
       activePage = MealsScreen(
-        meals: _favouriteMeals,
-        onToggleFavourite: _toggleMealFavouriteStatus,
+        meals: _favoriteMeals,
+        onToggleFavorite: _toggleMealFavoriteStatus,
       );
-      activePageTitle = 'Your Favourites';
+      activePageTitle = 'Your Favorites';
     }
 
     return Scaffold(
@@ -111,8 +122,13 @@ class _TabScreenState extends State<TabsScreen> {
         currentIndex: _selectedPageIndex,
         items: const [
           BottomNavigationBarItem(
-              icon: Icon(Icons.set_meal), label: 'Categories'),
-          BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Favorites'),
+            icon: Icon(Icons.set_meal),
+            label: 'Categories',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.star),
+            label: 'Favorites',
+          ),
         ],
       ),
     );
